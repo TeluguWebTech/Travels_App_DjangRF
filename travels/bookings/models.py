@@ -15,7 +15,8 @@ class Bus(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
     def __str__(self):
-        return f"{self.bus_name} {self.number} {self.origin} {self.destination} "
+        # return f"{self.bus_name} {self.number} {self.origin} {self.destination} "
+        return f"{self.bus_name} {self.number} "
 
 
 class Seat(models.Model):
@@ -24,7 +25,8 @@ class Seat(models.Model):
     is_booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.bus} {self.seat_number} "
+        # return f"{self.bus} {self.seat_number} "
+        return f" {self.seat_number} "
     
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,3 +36,13 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username}-{self.bus.bus_name}-{self.bus.start_time}-{self.bus.reach_time}-{self.seat.seat_number}"
+    
+    @property
+    def price(self):
+        return self.bus.price
+    @property
+    def origin(self):
+        return self.bus.origin
+    @property
+    def destination(self):
+        return self.bus.destination

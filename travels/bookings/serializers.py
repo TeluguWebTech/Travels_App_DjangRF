@@ -19,22 +19,47 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
     
 
-class BusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Bus
-        fields = '__all__'
+# class BusSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Bus
+#         fields = '__all__'
+
+# class SeatSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Seat
+#         fields = ['id','seat_number', 'is_booked']
 
 class SeatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seat
         fields = ['id','seat_number', 'is_booked']
 
+class BusSerializer(serializers.ModelSerializer):
+    seats = SeatSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Bus
+        fields = '__all__'
+
+class BusSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bus
+        fields = ['bus_name', 'number', 'origin', 'destination']
+
 class BookingSerializer(serializers.ModelSerializer):
-    bus = serializers.StringRelatedField()
-    seat = SeatSerializer
+    # bus = serializers.StringRelatedField()
+    # seat = SeatSerializer
+    # user = serializers.StringRelatedField()
+    bus = BusSummarySerializer(read_only=True)
+    seat = SeatSerializer(read_only=True)
     user = serializers.StringRelatedField()
+    price = serializers.StringRelatedField()
+    origin = serializers.StringRelatedField()
+    destination = serializers.StringRelatedField()
+
 
     class Meta:
         model = Booking
         fields = '__all__'
-        read_only_fields = ['user', 'booking_time', 'bus', 'seat']
+        # read_only_fields = ['user', 'booking_time', 'bus', 'seat']
+        read_only_fields = ['user', 'booking_time', 'bus', 'seat', 'price','origin','destination']
